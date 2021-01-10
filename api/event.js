@@ -1,0 +1,127 @@
+'use strict'
+const express = require('express')
+const app = express()
+const event = express.Router()
+const AWS = require("aws-sdk");
+const joi = require('joi');
+const Validator = require('./validator');
+const redis = require('redis');
+
+// make a connection to the local instance of redis
+const client = redis.createClient(6379);
+ 
+
+client.on("error", (error) => {
+ console.error(error);
+});
+
+const eventl = [{
+  event_id: 1,
+  action_creator: 'Echo',
+  receiver: '',
+  event_type: '',
+  event_hash: '',
+  time:'',
+  url_from:'',
+  agent: {}
+}]
+
+
+AWS.config.update({
+  region: "us-east-2",
+  // endpoint: "http://localhost:8000"
+});
+
+const docClient = new AWS.DynamoDB.DocumentClient();
+const event_table = "event_t";
+// middleware that is specific to this router
+event.use(function timeLog (req, res, next) {
+  console.log('Time: ', Date.now())
+  next()
+})
+
+addEventSchema(){
+  return joi.object().keys({
+    action_creator: joi.string().optional(),
+    receiver: joi.string().optional(),
+    event_type: joi.string().optional(),
+    event_hash: joi.string().optional(),
+    time: joi.string().optional(),
+    url_from: joi.string().optional(),
+    agent: joi.string().optional(),
+  })
+}
+
+// define the home page route
+event.post('/addEvent', Validator(addEventSchema), function (req, res) {
+  console.log(req.body);
+  var params = {
+		TableName: event_table,
+		Item: {
+      event_id: req.body.event_id,
+      action_creator: req.body.action_creator,
+      receiver: req.body.receiver,
+      event_type: req.body.event_type,
+      event_hash: req.body.event_hash,
+      time: req.body.time,
+      url_from: req.body.url_from,
+      agent: req.body.agent
+		}
+	};
+  console.log(params);
+
+  console.log("Adding a new event...");
+  client.get(data, async (err, redisres) => {
+    if (redisres) {
+      res.status(201).json(Object.assign(data,{"message": "data already stored"}))
+    } else {
+      docClient.put(params, function(err, data) {
+          if (err) {
+              console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+          } else {
+              client.setex(data, 1440, JSON.stringify(data));
+              console.log("Added item:", JSON.stringify(data, null, 2));
+              res.status(201).json(data)
+          }
+      });
+    }
+  })
+})
+
+event.get('/listEvent', function (req, res) {
+  var params = {
+		TableName: event_table
+	};
+  docClient.scan(params, onScan);
+
+  function onScan(err, data) {
+      if (err) {
+          console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+      } else {
+          // print all the Products
+          console.log("Scan succeeded.");
+          res.status(200).json(data)
+      }
+  }
+})
+
+
+event.post('/queryEvent', function (req, res) {
+  var params = {
+    TableName: event_table,
+    Key:req.body.filters
+  };
+  docClient.scan(params, onScan);
+
+  function onScan(err, data) {
+      if (err) {
+          console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+      } else {
+          // print all the Products
+          console.log("Scan succeeded.");
+          res.status(200).json(data)
+      }
+  }
+})
+
+module.exports = event
