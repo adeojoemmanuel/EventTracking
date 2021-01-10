@@ -12,6 +12,7 @@ and also Store Unstructured, Semi-Structured, or Structured Data but most import
 
 - the api accept the following credentials where i made use of joi validator to manage the data that are being received  to make sure they meet the required data type
 
+```js
 	{
 		action_creator: 'the indentity of the person who created the action',
 		receiver: '',
@@ -22,6 +23,7 @@ and also Store Unstructured, Semi-Structured, or Structured Data but most import
 		agent: { a json object that carries information about the reqest, eg browser type, device type, ipaddress }
 	}
 
+```
 - to handle duplicate  event we cache the last 5  requests for each client, and For every new request we check the cache for duplicate  action and event
 
 - Data is accessible and analysable due the way they are stored, they can be queried using one field or multiple fields.
