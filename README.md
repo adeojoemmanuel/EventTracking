@@ -24,7 +24,7 @@ and also Store Unstructured, Semi-Structured, or Structured Data but most import
 	}
 
 ```
-- to handle duplicate  event we cache the last 5  requests for each client, and For every new request we check the cache for duplicate  action and event
+- to handle duplicate  event we cache the last requests for each client, and For every new request we check the cache for duplicate  action and event
 
 - Data is accessible and analysable due the way they are stored, they can be queried using one field or multiple fields.
 
