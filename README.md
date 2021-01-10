@@ -29,12 +29,21 @@ and also Store Unstructured, Semi-Structured, or Structured Data but most import
 - Data is accessible and analysable due the way they are stored, they can be queried using one field or multiple fields.
 
 
+Bottle Neck
+===============
+
+one of the bottle neck of this approch is getting agregate by agent type, as i didnt really cather for  that 
+
+
+
 Endpoints
 -----------
 
 ## Base URL : 'http://127.0.0.1/v1/'
 
 - *POST* `/addEvent`
+
+Description: this endpoint accept json in the following format
 
 ```js
 {
@@ -49,18 +58,22 @@ Endpoints
 
 - *GET* `/listEvent`
 
+Description: this endpoint returns data in the following format
+
 ```js
 {
-  action_creator: required, string,
-  receiver: required, string,,
-  event_type: required, string,
-  time: required, datetime,
-  url_from: required, string,
-  agent: required, json,
+  action_creator:  string,
+  receiver:  string,
+  event_type:  string,
+  time:  datetime,
+  url_from:  string,
+  agent:  json,
 }
 ```
 
 - *POST* `/queryEvent`
+
+Description: this endpoint accept data in the following format and returns data just like above
 
 ```js
 {
@@ -112,6 +125,15 @@ To Install Gulp commandline run
 ```shell
 sudo npm install -g gulp
 ```
+
+Start Redis Server
+===============
+
+```
+redis-server
+```
+
+
 
 Start App Local
 ===============
