@@ -55,7 +55,7 @@ Description: this endpoint accept json in the following format
 }
 ```
 
-- *GET* `/listEvent`
+- *GET* `/listEvent/:action_creator?/:receiver?/:event_type?/:url_from?`
 
 Description: this endpoint returns data in the following format
 
