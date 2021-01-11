@@ -1,38 +1,37 @@
 Event tracking
 ==============
 
-This project is a solution for the Event tracking system built with Node.js, Express and DynamoDB. Deployed in a server-less way to AWS Lambda and AWS API Gateway using Claudia.js and dev local using gulp
+This project is a solution for the Event tracking system built with Node.js, redis, Express and DynamoDB. Deployed in a serverless way to AWS Lambda and AWS API Gateway using Claudia.js and dev local using gulp
 
 
 Requirements Met
 ===============
 
 - A non-relational database approched was picked so as to Handle Large Volumes of Data at High Speed  even with a Scale-Out Architecture
-and also Store Unstructured, Semi-Structured, or Structured Data but most importanly for this project, it was selected to handle large data at highspeed, and also because dynamo db was recommended in the question
+and also Store Unstructured, Semi-Structured, or Structured Data but most importanly for this project, it was selected to handle large data at highspeed
 
-- the api accept the following credentials where i made use of joi validator to manage the data that are being received  to make sure they meet the required data type
+- The API accept the following credentials where i made use of joi validator to manage the data that are being received  to make sure they meet the required data type
 
 ```js
 	{
-		action_creator: 'the indentity of the person who created the action',
-		receiver: '',
+		action_creator: 'the indentity of the person who created the action can be userid',
+		receiver: 'where   the event points to',
 		event_type: 'the type of action that was created',
-		event_hash: 'the hash of the params sent',
 		time: 'the  time the action was performed',
 		url_from: 'the url souce where the action was performed',
 		agent: { a json object that carries information about the reqest, eg browser type, device type, ipaddress }
 	}
 
 ```
-- to handle duplicate  event we cache the last requests for each client, and For every new request we check the cache for duplicate  action and event
+- to handle duplicate  event we cache the last requests for each client, and For every new request we check the cache for duplicate  action and event, data would be  kept in cache for 5 minite before it expires
 
-- Data is accessible and analysable due the way they are stored, they can be queried using one field or multiple fields.
+- Data is accessible and analysable due the way they are stored, they can be queried using one field or multiple fields, and are available in a digital, machine readable format.
 
 
 Bottle Neck
 ===============
 
-one of the bottle neck of this approch is getting agregate by agent type, as i didnt really cather for  that 
+one of the bottle neck of this approch is getting agregate by agent type, as i didnt really cater for  that 
 
 
 
@@ -71,26 +70,14 @@ Description: this endpoint returns data in the following format
 }
 ```
 
-- *POST* `/queryEvent`
+- *GET* `/singleEvent/:eventid`
 
-Description: this endpoint accept data in the following format and returns data just like above
-
-```js
-{
-  action_creator:  string,
-  receiver:  string,
-  event_type:  string,
-  start_date:  date,
-  stop_date: date,
-  url_from: string
-}
-```
-
+Description: this endpoint returns data for a specific event using its id
 
 Architecture
 ------------
 
-Simple REST API deplyed in AWS Lambda persisting data into DynamoDB and retrieving data back.
+Simple REST API deployed to AWS lambda. The lambda persists and retrieves  data back.
 
 Express is a minimal and flexible Node.js micro web application framework. Express provides HTTP utility methods and middleware to create quick API.
 
@@ -98,7 +85,7 @@ API Gateway and Lambda together provides a secure, easy and elegant way to creat
 
 Amazon DynamoDB is a fully managed and hosted AWS NoSQL database service.
 
-Claudia.js is an open source Node.js deployment tool that helps automated deployment of Node.js app in a server-less way to AWS Lambda and AWS API Gateway.
+Claudia.js is an open source Node.js deployment tool that helps automated deployment of Node.js app in a serverless function to AWS Lambda and AWS API Gateway.
 
 ![Architecture - Adeojo Emmanuel ](documents/Architecture.png)
 

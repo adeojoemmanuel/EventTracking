@@ -20,7 +20,6 @@ const eventl = [{
   action_creator: 'Echo',
   receiver: '',
   event_type: '',
-  event_hash: '',
   time:'',
   url_from:'',
   agent: {}
@@ -45,7 +44,6 @@ addEventSchema(){
     action_creator: joi.string().optional(),
     receiver: joi.string().optional(),
     event_type: joi.string().optional(),
-    event_hash: joi.string().optional(),
     time: joi.string().optional(),
     url_from: joi.string().optional(),
     agent: joi.string().optional(),
@@ -62,7 +60,6 @@ event.post('/addEvent', Validator(addEventSchema), function (req, res) {
       action_creator: req.body.action_creator,
       receiver: req.body.receiver,
       event_type: req.body.event_type,
-      event_hash: req.body.event_hash,
       time: req.body.time,
       url_from: req.body.url_from,
       agent: req.body.agent
@@ -88,7 +85,7 @@ event.post('/addEvent', Validator(addEventSchema), function (req, res) {
   })
 })
 
-event.get('/listEvent', function (req, res) {
+event.get('/listEvent/:action_creator?/:receiver?/:event_type?/:url_from?', function (req, res) {
   var params = {
 		TableName: event_table
 	};
@@ -106,10 +103,10 @@ event.get('/listEvent', function (req, res) {
 })
 
 
-event.post('/queryEvent', function (req, res) {
+event.post('/singleEvent/:eventId', function (req, res) {
   var params = {
     TableName: event_table,
-    Key:req.body.filters
+    Key:{event_id: req.params.eventId}
   };
   docClient.scan(params, onScan);
 
