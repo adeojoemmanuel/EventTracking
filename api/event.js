@@ -86,8 +86,15 @@ event.post('/addEvent', Validator(addEventSchema), function (req, res) {
 })
 
 event.get('/listEvent/:action_creator?/:receiver?/:event_type?/:url_from?', function (req, res) {
+  let filter =  {
+    action_creator: req.params.action_creator,
+    receiver: req.params.receiver,
+    event_type: req.params.event_type,
+    url_from: req.params.url_from
+  }
   var params = {
-		TableName: event_table
+		TableName: event_table,
+    Key: filter
 	};
   docClient.scan(params, onScan);
 

@@ -15,7 +15,7 @@ and also Store Unstructured, Semi-Structured, or Structured Data but most import
 ```js
 	{
 		action_creator: 'the indentity of the person who created the action can be userid',
-		receiver: 'where   the event points to',
+		receiver: 'where the event points to',
 		event_type: 'the type of action that was created',
 		time: 'the  time the action was performed',
 		url_from: 'the url souce where the action was performed',
@@ -98,7 +98,7 @@ The easiest way to get started is to clone the repository:
 
 ```shell
 git clone --depth=1 git@github.com:adeojoemmanuel/EventTracking.git eventTracking
-cd myproject
+cd eventTracking
 ```
 
 ### Install NPM dependencies
@@ -119,8 +119,6 @@ Start Redis Server
 ```
 redis-server
 ```
-
-
 
 Start App Local
 ===============
